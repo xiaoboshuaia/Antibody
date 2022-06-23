@@ -1,0 +1,23 @@
+HAtom HRotate_2(HAtom atom_each, double vx, double vy,
+   double vz, double ang)
+{
+ const double PI = 3.1415926;
+ HAtom res;
+ res = atom_each;
+ double a, b, c, ang_res;
+ ang_res = ang * PI / 180.0;
+ double k = 1 - cos(ang_res);
+ a = vx;
+ b = vy;
+ c = vz;
+ res.x = ( a*a + (1-a*a)*cos(ang_res) )*atom_each.x +
+  ( a*b*k - c*sin(ang_res) )*atom_each.y +
+  ( a*c*k + b*sin(ang_res) )*atom_each.z;
+ res.y = ( a*b*k + c*sin(ang_res) )*atom_each.x +
+  ( b*b + (1-b*b)*cos(ang_res) )*atom_each.y +
+  ( b*c*k - a*sin(ang_res) )*atom_each.z;
+ res.z = ( a*c*k - b*sin(ang_res) )*atom_each.x +
+  ( b*c*k + a*sin(ang_res) )*atom_each.y +
+  ( c*c + (1-c*c)*cos(ang_res) )*atom_each.z;
+ return res;
+}

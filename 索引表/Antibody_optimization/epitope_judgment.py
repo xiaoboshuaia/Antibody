@@ -4,9 +4,7 @@ Created on Thu Jan 20 16:38:44 2022
 
 @author: 97380
 """
-import numpy as np
-import pandas as pd
-from Wheels import distance,dict_to_df,differ_ab_ag
+from Wheels import dict_to_df, differ_ab_ag, distance
 
 """
 将抗原和抗体的表位附近的氨基酸找出来
@@ -45,7 +43,7 @@ def range_H_CA(CA, x_y_z):
     CA_max = range_CA(CA, x_y_z)[1]
     return CA_min - 15, CA_max + 15
 
-# CA from antibody or antigen probablly have H_bond,
+# CA from antibody or antigen probably have H_bond,
 # CA could be antigen or antibody,the first CA is used to screening
 
 
@@ -94,7 +92,7 @@ def ab_ag_req_dic(antibody, antigen):
                 ag_re_seq[ag['chain']].append(ag['re_seq'])
     return de_rep_val(ab_re_seq), de_rep_val(ag_re_seq)
 
-# creat a dict to save epitope amino,from a big dict ,input antibody or antigen dict and a dict to save amino re_seq information
+# create a dict to save epitope amino,from a big dict ,input antibody or antigen dict and a dict to save amino re_seq information
 # format ab_ag_re_seq{'chain':['re_seq'],'chain':[re_seq]}
 # format ab_ag_dict{'chain':{re_seq:[[ATOM,etc.]]}}
 
@@ -118,11 +116,3 @@ def ab_ag_epi_df(file):
     ag_epi_ami_df = dict_to_df(dict_epito_amino(
         differ_ab_ag(file)[1], ag_re_seq))
     return ab_epi_ami_df, ag_epi_ami_df
-
-
-
-
-
-
-
-
