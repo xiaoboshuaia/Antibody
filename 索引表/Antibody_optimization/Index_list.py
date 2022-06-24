@@ -6,7 +6,7 @@ import os
 from pandas import DataFrame
 from data import donor, receptor
 from epitope_judgment import ab_ag_epi_df
-from Wheels import dict_to_df,differ_ab_ag,distance,chain_antibody_antigen,dict_pdb_atom
+from Wheels import dict_to_df, differ_ab_ag, distance, chain_antibody_antigen, dict_pdb_atom
 
 
 # 获取当前.py文件所在的目录
@@ -28,7 +28,6 @@ def open_pdb_file(pdb_path):
     with open(pdb_path, 'r') as pdb_file:
         pdb_file = pdb_file.read().split("\n")
     return pdb_file
-
 
 
 """
@@ -67,7 +66,7 @@ def Hydrophobic_Geometric_center_coordinates(pdb_file):
 
 
 """
-将保存在字典中的pdb的原子信息转化为 dataframe
+将保存在字典中的pdb的原子信息转化为dataframe
 
 将抗原和抗体的信息分别进行保存
 
@@ -122,8 +121,6 @@ def H_bond_donor_receptor_coordinates_loc_new(pdb_file):
     antigen['is_donor'] = antigen_donor
     ag_H_do_coor = antigen.loc[antigen['is_donor']]
     return ab_H_do_coor, ag_H_re_coor, ab_H_re_coor, ag_H_do_coor
-
-
 
 
 """
