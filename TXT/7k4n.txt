@@ -1,0 +1,4 @@
+Type_bond	Amino_antibody	chain	re_seq	Amino_antigen	chain	re_seq	distance
+H_bond	CYS	H	106	ALA	A	475	2.894
+H_bond	CYS	C	106	ALA	B	475	2.894
+H_bond	CYS	F	106	ALA	E	475	2.894

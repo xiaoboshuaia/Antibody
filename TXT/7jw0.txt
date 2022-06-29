@@ -1,0 +1,10 @@
+Type_bond	Amino_antibody	chain	re_seq	Amino_antigen	chain	re_seq	distance
+Hydrophobic	PRO	C	95	PRO	B	384	6.052
+Hydrophobic	PRO	F	95	PRO	E	384	6.052
+Hydrophobic	PRO	L	95	PRO	A	384	6.052
+H_bond	SER	L	94	CYS	A	379	3.03
+H_bond	SER	C	94	CYS	B	379	3.03
+H_bond	SER	F	94	CYS	E	379	3.03
+H_bond	SER	L	94	CYS	A	379	2.87
+H_bond	SER	C	94	CYS	B	379	2.871
+H_bond	SER	F	94	CYS	E	379	2.87

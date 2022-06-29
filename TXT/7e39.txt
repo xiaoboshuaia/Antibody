@@ -1,0 +1,7 @@
+Type_bond	Amino_antibody	chain	re_seq	Amino_antigen	chain	re_seq	distance
+Hydrophobic	MET	C	105	PHE	A	486	5.886
+Hydrophobic	PHE	C	53	PRO	A	479	4.919
+Hydrophobic	VAL	C	101	VAL	A	483	4.796
+H_bond	TYR	B	49	GLY	A	485	2.984
+H_bond	GLU	C	99	ASN	A	487	2.947
+H_bond	GLU	C	99	SER	A	477	3.016

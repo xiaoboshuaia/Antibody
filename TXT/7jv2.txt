@@ -1,0 +1,9 @@
+Type_bond	Amino_antibody	chain	re_seq	Amino_antigen	chain	re_seq	distance
+Hydrophobic	LEU	H	98	VAL	A	483	5.444
+Hydrophobic	PHE	H	27	VAL	A	483	5.265
+Hydrophobic	VAL	H	2	VAL	A	483	4.875
+H_bond	SER	H	100	GLU	A	484	2.768
+H_bond	TYR	L	51	GLY	A	485	3.242
+H_bond	SER	L	58	GLU	A	484	2.761
+H_bond	SER	L	58	GLU	A	484	2.809
+H_bond	SER	H	100	PHE	A	486	2.862

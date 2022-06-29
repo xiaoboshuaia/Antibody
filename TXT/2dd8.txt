@@ -1,0 +1,10 @@
+Type_bond	Amino_antibody	chain	re_seq	Amino_antigen	chain	re_seq	distance
+Hydrophobic	TRP	L	91	ILE	S	489	4.217
+H_bond	ASN	H	58	ASP	S	392	3.372
+H_bond	SER	H	31	THR	S	486	2.608
+H_bond	GLY	H	50	TYR	S	491	3.389
+H_bond	ILE	H	56	TYR	S	491	3.429
+H_bond	VAL	H	97	GLN	S	492	2.756
+H_bond	SER	L	93	ARG	S	395	3.382
+H_bond	ASP	L	95	ARG	S	395	3.001
+H_bond	ASP	L	95	ARG	S	395	3.461

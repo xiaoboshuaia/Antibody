@@ -1,0 +1,15 @@
+Type_bond	Amino_antibody	chain	re_seq	Amino_antigen	chain	re_seq	distance
+Hydrophobic	ILE	H	52	PHE	A	1238	5.467
+Hydrophobic	ILE	H	52	PHE	A	1239	5.999
+Hydrophobic	PHE	H	35	PHE	A	1238	5.899
+Hydrophobic	PHE	H	35	PHE	A	1239	5.215
+Hydrophobic	LEU	L	102	LEU	A	1235	6.083
+Hydrophobic	LEU	L	102	PHE	A	1231	4.751
+Hydrophobic	PHE	L	103	LEU	A	1235	5.69
+H_bond	ARG	H	109	ASP	A	1236	2.881
+H_bond	LEU	L	32	GLN	A	1232	3.481
+H_bond	ASN	L	34	GLN	A	1232	3.242
+H_bond	ASN	L	34	ASP	A	1236	3.129
+H_bond	ASN	L	100	GLN	A	1232	2.963
+H_bond	ASP	H	105	LYS	A	1240	2.932
+H_bond	LEU	L	32	GLN	A	1232	3.48

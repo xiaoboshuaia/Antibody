@@ -1,0 +1,4 @@
+Type_bond	Amino_antibody	chain	re_seq	Amino_antigen	chain	re_seq	distance
+Hydrophobic	ILE	H	51	VAL	A	445	5.99
+Hydrophobic	LEU	L	95	VAL	A	445	5.475
+Hydrophobic	TRP	L	90	VAL	A	445	6.125

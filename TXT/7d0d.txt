@@ -1,0 +1,5 @@
+Type_bond	Amino_antibody	chain	re_seq	Amino_antigen	chain	re_seq	distance
+Hydrophobic	LEU	G	103	PHE	B	486	5.196
+Hydrophobic	LEU	H	103	PHE	A	486	5.196
+H_bond	SER	H	32	GLU	A	484	3.424
+H_bond	SER	G	32	GLU	B	484	3.425

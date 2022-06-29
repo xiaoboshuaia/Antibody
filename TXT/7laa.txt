@@ -1,0 +1,12 @@
+Type_bond	Amino_antibody	chain	re_seq	Amino_antigen	chain	re_seq	distance
+H_bond	ARG	H	52	LEU	A	492	3.157
+H_bond	ARG	H	94	GLU	A	484	2.814
+H_bond	ARG	H	94	GLU	A	484	3.286
+H_bond	ARG	H	94	GLU	A	484	2.715
+H_bond	ARG	H	96	GLU	A	484	2.775
+H_bond	ARG	H	96	GLU	A	484	2.733
+H_bond	ARG	H	97	TYR	A	449	3.348
+H_bond	ARG	H	97	TYR	A	449	2.791
+H_bond	TYR	H	100	GLU	A	471	2.654
+H_bond	TYR	L	49	ASN	A	481	2.725
+H_bond	ASP	H	54	GLN	A	493	2.81

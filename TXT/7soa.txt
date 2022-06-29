@@ -1,0 +1,7 @@
+Type_bond	Amino_antibody	chain	re_seq	Amino_antigen	chain	re_seq	distance
+H_bond	ASN	L	53	ASP	A	111	3.171
+H_bond	ARG	H	52	ASP	A	88	2.895
+H_bond	TYR	H	53	LEU	A	268	2.961
+H_bond	SER	H	31	ASN	A	87	3.072
+H_bond	SER	H	102	THR	A	234	3.18
+H_bond	SER	H	107	ARG	A	235	3.429

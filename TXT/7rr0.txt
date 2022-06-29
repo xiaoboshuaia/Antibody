@@ -1,0 +1,11 @@
+Type_bond	Amino_antibody	chain	re_seq	Amino_antigen	chain	re_seq	distance
+Hydrophobic	ALA	B	33	PHE	A	486	6.321
+Hydrophobic	PHE	B	110	PHE	A	486	5.138
+Hydrophobic	PRO	B	99	PHE	A	486	5.553
+H_bond	CYS	B	106	ALA	A	475	2.547
+H_bond	TYR	C	33	PHE	A	486	3.089
+H_bond	TYR	C	33	CYS	A	488	2.936
+H_bond	SER	B	55	GLN	A	493	2.901
+H_bond	THR	B	104	TYR	A	473	3.42
+H_bond	TYR	B	107	ASN	A	487	3.397
+H_bond	ASP	B	108	SER	A	477	3.226

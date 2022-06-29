@@ -1,0 +1,15 @@
+Type_bond	Amino_antibody	chain	re_seq	Amino_antigen	chain	re_seq	distance
+Hydrophobic	VAL	B	100	LEU	A	244	4.95
+Hydrophobic	VAL	B	100	VAL	A	143	4.77
+Hydrophobic	VAL	H	100	LEU	C	244	3.997
+Hydrophobic	VAL	H	100	VAL	C	143	5.805
+Hydrophobic	VAL	M	100	LEU	K	244	4.327
+Hydrophobic	VAL	M	100	VAL	K	143	6.312
+H_bond	VAL	M	100	LEU	K	244	3.207
+H_bond	PRO	H	30	ASN	C	149	3.403
+H_bond	PRO	H	52	ASN	C	148	2.968
+H_bond	PRO	B	30	ASN	A	149	2.874
+H_bond	PRO	B	52	ASN	A	149	2.811
+H_bond	GLU	B	53	ASN	A	148	2.783
+H_bond	PRO	M	30	ASN	K	149	2.857
+H_bond	GLU	M	31	ASN	K	149	2.887

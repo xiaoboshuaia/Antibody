@@ -1,0 +1,6 @@
+Type_bond	Amino_antibody	chain	re_seq	Amino_antigen	chain	re_seq	distance
+Hydrophobic	ILE	H	100	PHE	A	490	6.188
+Hydrophobic	TRP	L	32	PRO	A	499	6.024
+Hydrophobic	ILE	M	100	PHE	C	490	3.932
+Hydrophobic	TRP	N	32	PRO	C	499	6.106
+H_bond	GLN	N	50	ARG	C	346	2.967

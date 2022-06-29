@@ -1,0 +1,5 @@
+Type_bond	Amino_antibody	chain	re_seq	Amino_antigen	chain	re_seq	distance
+Hydrophobic	PHE	C	27	ALA	E	475	5.74
+Hydrophobic	PHE	H	27	ALA	A	475	4.674
+Hydrophobic	VAL	H	2	PHE	A	486	5.625
+H_bond	PRO	H	53	TYR	A	421	3.287
