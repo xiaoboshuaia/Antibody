@@ -183,7 +183,7 @@ if __name__ == '__main__':
     Index_list = pd.DataFrame()
     Index_list_final = pd.DataFrame()
     for i in pdb_name:
-        if i[-3:] == 'ent':
+        if i[-3:] == 'ent':#以ent结尾的文件为PDB文件
             pdb_file = open_pdb_file(absolute_path + '\\' + i)
             antibody_chain, antigen_chain = chain_antibody_antigen(pdb_file)
             if antibody_chain != [] and antigen_chain != []:
@@ -191,7 +191,7 @@ if __name__ == '__main__':
                 Index_list_final = Index_list.append(force_information)
                 force_information.to_csv(absolute_path + '\\Index_list\\'
                                         + i[3:7] + '.txt', sep='\t',
-                                        index=False, header=True)
+                                        index=False, header=True)#i[3:7]因为pdb文件开头为pdb，所以从第4位开始截取,文件名称 'pdb7bwj.ent'
 
     Index_list_final.to_csv(absolute_path + '\\Index_list\\Index_list_final.txt', sep='\t',
                             index=False, header=True)

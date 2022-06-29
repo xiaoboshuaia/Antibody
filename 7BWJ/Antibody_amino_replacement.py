@@ -2,10 +2,11 @@
 Author: xiaobo 973801194@qq.com
 Date: 2022-06-24 16:22:02
 LastEditors: xiaobo 973801194@qq.com
-LastEditTime: 2022-06-29 11:52:50
+LastEditTime: 2022-06-29 18:14:51
 FilePath: \Project\Antibody\Index\Antibody_optimization\Antibody_amino_replacement.py
 Description:
 '''
+# TODO:   通过字典的方式,将目标氨基酸进行替换
 import os
 import sys
 # 将索引表添加到系统路径中
@@ -60,7 +61,12 @@ def top5_amino(ag_amino_name):
         top5_amino.append(i[0])
     return top5_amino
 
-
+#del cannot replace amino from antibody_amino_list
+def del_cannot_replace_amino(antibody_amino_list,cannot_replace_amino):
+    for i in cannot_replace_amino:
+        if i in antibody_amino_list:
+            antibody_amino_list.remove(i)
+    return antibody_amino_list
 
 
 
@@ -112,6 +118,24 @@ for i in top_5_amino_antibody[ep_antigen_name]:
         
         
 ASN_1 = atom(rotamers['ASN'][1])
+
+#get after rotation and translation rotamer dataFrame ,input is the rotamer,antibody dataFrame,output is the rotamer dataFrame
+def final_rotamer_dataFrame(rotamer_amino_df,antibody_amino_df):
+    ro_normal_vector = normal_vector(vector_pairs(rotamer_amino_df)[0], vector_pairs(rotamer_amino_df)[1])
+    ab_normal_vector = normal_vector(vector_pairs(antibody_amino_df)[0], vector_pairs(antibody_amino_df)[1])
+    ro_first_rotation = new_rotamer(rotamer_amino_df, ab_normal_vector, ro_normal_vector)
+    ro_second_rotation = new_rotamer(ro_first_rotation, vector_pairs(antibody_amino_df)[0], vector_pairs(ro_first_rotation)[0])
+    move_list = move_x_y_z(antibody_amino_df,ro_second_rotation)
+    ro_final = coordinate_translation(ro_second_rotation,move_list)
+    ro_final.loc[ro_final['ATOM_NAME'] == ' O  '] = antibody_amino_df.loc[antibody_amino_df['ATOM_NAME'] == ' O  ']
+    return ro_final
+
+
+
+
+
+
+
 
 
 #rotation and translation the rotamer
@@ -172,19 +196,75 @@ for i in range(len(ag_receptor)):
 
 
 if __name__ == '__main__':
+    """将interface的抗体氨基酸进行替换,并计算替换后的抗体能产生的氢键 
+    
+    """     
     pdb_file_list = open_pdb_file(get_pdb_file(os.getcwd())[0])#get_pdb_file得到的是list，由于只有一个元素，所以要用[0]
-    pdb_file_dict = dict_pdb_atom(pdb_file_list)
-    pdb_file_df = dict_to_df(pdb_file_dict)
-    cannot_replace_amino_dict = get_cannot_replace_amino(get_txt_file(os.getcwd())[0])
-    antibody_dict,antigen_dict = differ_ab_ag(pdb_file_list)
-    interface_antibody_df,interface_antigen_df = ab_ag_epi_df(pdb_file_list)
-    ab_ag_cor_dict = ab_ag_correspondence(interface_antibody_df,interface_antigen_df)
-    interface_antigen_list = list(ab_ag_cor_dict.keys())
+    pdb_file_dict = dict_pdb_atom(pdb_file_list)#将pdb文件转换成字典
+    pdb_file_df = dict_to_df(pdb_file_dict)#将字典转换成dataFrame
+    
+    cannot_replace_amino_list = get_cannot_replace_amino(get_txt_file(os.getcwd())[0])#获得不能替换的抗体氨基酸的list
+    
+    antibody_dict,antigen_dict = differ_ab_ag(pdb_file_list)#得到抗体和受体的字典
+    
+    interface_antibody_df,interface_antigen_df = ab_ag_epi_df(pdb_file_list)#得到interface的抗体和受体的dataFrame
+    
+    ab_ag_cor_dict = ab_ag_correspondence(interface_antibody_df,interface_antigen_df)#得到interface的抗体和抗原的对应关系即CA距离小于19A
+    
+    interface_antigen_list = list(ab_ag_cor_dict.keys())#得到interface的抗原的list
+    
     for ag_amino in interface_antigen_list:
-        ag_amino_df = get_amino_dataFrame(interface_antigen_df,ag_amino)
-        ab_amino_list = ab_ag_cor_dict[ag_amino]
-        rotamer_name = top5_amino(ag_amino[2])
+        ag_amino_df = get_amino_dataFrame(interface_antigen_df,ag_amino)#得到一个抗原氨基酸的dataFrame
         
+        #得到抗原氨基酸对应抗体的list，在抗体的list中删除不能替换的抗体氨基酸
+        ab_amino_list = del_cannot_replace_amino(ab_ag_cor_dict[ag_amino],cannot_replace_amino_list)#删除不能替换的氨基酸
+        
+        rotamer_name = top5_amino(ag_amino[2])#得到替换抗体的top5氨基酸名字的list
+        
+        for ab_amino in ab_ag_cor_dict[ag_amino]:
+            ab_amino_df = get_amino_dataFrame(interface_antibody_df,ab_amino)#得到一个抗体氨基酸的dataFrame
+            
+            
+            for rotamer in rotamer_name:
+                for ro_type in list(rotamers[rotamer].keys()):
+                    rotamer_df = atom(rotamers[rotamer][ro_type])
+                    #得到旋转平移后的rotamer的dataFrame
+                    ro_final_df = final_rotamer_dataFrame(rotamer_df,ab_amino_df)
+                    ro_final_df = Unified_column_names(ro_final_df,ab_amino[0],ab_amino[1])
+
+# TODO def x (ro,antigen):
+#            return 氢键信息的字典 
+#            字典 = x(ro,antigen)
+#            if 字典非空：
+#               一个替换过rotamer的df = 函数（ro）    
+#               格式化df
+#               将df生成pdb文件，名字为（链_re_seq_被替换氨基酸名字_替换的rotamer的名字_ro_type）
+#                  字典保存成txt文件
+#
+#
+#
+#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
