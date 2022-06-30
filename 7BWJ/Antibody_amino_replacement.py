@@ -2,7 +2,7 @@
 Author: xiaobo 973801194@qq.com
 Date: 2022-06-24 16:22:02
 LastEditors: xiaobo 973801194@qq.com
-LastEditTime: 2022-06-29 18:14:51
+LastEditTime: 2022-06-30 10:31:22
 FilePath: \Project\Antibody\Index\Antibody_optimization\Antibody_amino_replacement.py
 Description:
 '''
@@ -68,13 +68,26 @@ def del_cannot_replace_amino(antibody_amino_list,cannot_replace_amino):
             antibody_amino_list.remove(i)
     return antibody_amino_list
 
+#get after rotation and translation rotamer dataFrame ,input is the rotamer,antibody dataFrame,output is the rotamer dataFrame
+def final_rotamer_dataFrame(rotamer_amino_df,antibody_amino_df):
+    ro_normal_vector = normal_vector(vector_pairs(rotamer_amino_df)[0], vector_pairs(rotamer_amino_df)[1])
+    ab_normal_vector = normal_vector(vector_pairs(antibody_amino_df)[0], vector_pairs(antibody_amino_df)[1])
+    ro_first_rotation = new_rotamer(rotamer_amino_df, ab_normal_vector, ro_normal_vector)
+    ro_second_rotation = new_rotamer(ro_first_rotation, vector_pairs(antibody_amino_df)[0], vector_pairs(ro_first_rotation)[0])
+    move_list = move_x_y_z(antibody_amino_df,ro_second_rotation)
+    ro_final = coordinate_translation(ro_second_rotation,move_list)
+    ro_final.loc[ro_final['ATOM_NAME'] == ' O  '] = antibody_amino_df.loc[antibody_amino_df['ATOM_NAME'] == ' O  ']
+    return ro_final
 
 
 
 
 
 
-   
+
+
+
+
 text_pdb = open_pdb_file(r'D:\Project\Antibody\Index\7BWJ\7bwj.pdb')
 
 
@@ -118,17 +131,6 @@ for i in top_5_amino_antibody[ep_antigen_name]:
         
         
 ASN_1 = atom(rotamers['ASN'][1])
-
-#get after rotation and translation rotamer dataFrame ,input is the rotamer,antibody dataFrame,output is the rotamer dataFrame
-def final_rotamer_dataFrame(rotamer_amino_df,antibody_amino_df):
-    ro_normal_vector = normal_vector(vector_pairs(rotamer_amino_df)[0], vector_pairs(rotamer_amino_df)[1])
-    ab_normal_vector = normal_vector(vector_pairs(antibody_amino_df)[0], vector_pairs(antibody_amino_df)[1])
-    ro_first_rotation = new_rotamer(rotamer_amino_df, ab_normal_vector, ro_normal_vector)
-    ro_second_rotation = new_rotamer(ro_first_rotation, vector_pairs(antibody_amino_df)[0], vector_pairs(ro_first_rotation)[0])
-    move_list = move_x_y_z(antibody_amino_df,ro_second_rotation)
-    ro_final = coordinate_translation(ro_second_rotation,move_list)
-    ro_final.loc[ro_final['ATOM_NAME'] == ' O  '] = antibody_amino_df.loc[antibody_amino_df['ATOM_NAME'] == ' O  ']
-    return ro_final
 
 
 
@@ -230,7 +232,7 @@ if __name__ == '__main__':
                     rotamer_df = atom(rotamers[rotamer][ro_type])
                     #得到旋转平移后的rotamer的dataFrame
                     ro_final_df = final_rotamer_dataFrame(rotamer_df,ab_amino_df)
-                    ro_final_df = Unified_column_names(ro_final_df,ab_amino[0],ab_amino[1])
+                    ro_final_df = Unified_column_names(ro_final_df,ab_amino[0],ab_amino[1])#ab_amino[0]是chain，ab_amino[1]是re_seq
 
 # TODO def x (ro,antigen):
 #            return 氢键信息的字典 
@@ -241,9 +243,43 @@ if __name__ == '__main__':
 #               将df生成pdb文件，名字为（链_re_seq_被替换氨基酸名字_替换的rotamer的名字_ro_type）
 #                  字典保存成txt文件
 #
-#
-#
-#
+#text
+## %%
+ag_amino_df = get_amino_dataFrame(interface_antigen_df,interface_antigen_list[0])
+ab_amino_list = del_cannot_replace_amino(ab_ag_cor_dict[interface_antigen_list[0]],cannot_replace_amino_list)
+rotamer_name = top5_amino(interface_antigen_list[0][2])
+ab_amino_df = get_amino_dataFrame(interface_antibody_df,ab_ag_cor_dict[interface_antigen_list[0]][0])
+rotamer_df = atom(rotamers['ASN'][1])
+ro_final_df = final_rotamer_dataFrame(rotamer_df,ab_amino_df)
+
+ro_final_df['re_seq'] = ab_ag_cor_dict[interface_antigen_list[0]][0][1]#ab_amino_info = 
+ro_final_df['chain'] = ab_ag_cor_dict[interface_antigen_list[0]][0][0]
+ro_final_df['RESIDUE_NAME'] = rotamer_name[0]
+
+ab_chain = ab_ag_cor_dict[interface_antigen_list[0]][0][0]
+ab_re_seq = ab_ag_cor_dict[interface_antigen_list[0]][0][1]
+
+ro_final_df.values.tolist()
+ab_amino_df.values.tolist()
+pdb_file_dict_replace = pdb_file_dict.copy()
+pdb_file_dict_replace[ab_chain][ab_re_seq] = ro_final_df.values.tolist()
+pdb_file_df_replace = dict_to_df(pdb_file_dict_replace)
+
+pdb_file_df_replace['ATOM_NUMBER'] = list(range(1,len(pdb_file_df_replace) + 1 ))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
