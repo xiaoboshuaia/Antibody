@@ -2,7 +2,7 @@
 Author: xiaobo 973801194@qq.com
 Date: 2022-06-24 16:22:02
 LastEditors: xiaobo 973801194@qq.com
-LastEditTime: 2022-06-30 10:31:22
+LastEditTime: 2022-07-01 17:44:39
 FilePath: \Project\Antibody\Index\Antibody_optimization\Antibody_amino_replacement.py
 Description:
 '''
@@ -14,7 +14,7 @@ sys.path.append('d:\Project\Antibody\Index\Antibody_optimization')
 import numpy
 import pandas
 from Data_procress import atom
-from amino_acid_substitution import Unified_column_names, coordinate_translation, move_x_y_z, new_rotamer, normal_vector, vector_pairs
+from amino_acid_substitution import Unified_column_names, all_formatDataFrame, coordinate_translation, move_x_y_z, new_rotamer, normal_vector, vector_pairs
 from data import rotamers,top_5_amino_antibody,donor,receptor
 from epitope_judgment import ab_ag_correspondence, ab_ag_epi_df
 from Wheels import dict_pdb_atom, dict_to_df, differ_ab_ag, distance, get_pdb_file, get_txt_file, open_pdb_file
@@ -79,7 +79,12 @@ def final_rotamer_dataFrame(rotamer_amino_df,antibody_amino_df):
     ro_final.loc[ro_final['ATOM_NAME'] == ' O  '] = antibody_amino_df.loc[antibody_amino_df['ATOM_NAME'] == ' O  ']
     return ro_final
 
-
+# 统一dataFrame的格式
+def Unified_df_format(df,chain,re_seq,rotamer_name):
+    df['chain'] = chain
+    df['re_seq'] = re_seq
+    df['RESIDUE_NAME'] = rotamer_name
+    return df
 
 
 
@@ -219,6 +224,7 @@ if __name__ == '__main__':
         ag_amino_df = get_amino_dataFrame(interface_antigen_df,ag_amino)#得到一个抗原氨基酸的dataFrame
         
         #得到抗原氨基酸对应抗体的list，在抗体的list中删除不能替换的抗体氨基酸
+        #TODO 这里可能需要再删除重复元素之前，对字典的值做一个copy以免删去原本的值
         ab_amino_list = del_cannot_replace_amino(ab_ag_cor_dict[ag_amino],cannot_replace_amino_list)#删除不能替换的氨基酸
         
         rotamer_name = top5_amino(ag_amino[2])#得到替换抗体的top5氨基酸名字的list
@@ -232,7 +238,16 @@ if __name__ == '__main__':
                     rotamer_df = atom(rotamers[rotamer][ro_type])
                     #得到旋转平移后的rotamer的dataFrame
                     ro_final_df = final_rotamer_dataFrame(rotamer_df,ab_amino_df)
-                    ro_final_df = Unified_column_names(ro_final_df,ab_amino[0],ab_amino[1])#ab_amino[0]是chain，ab_amino[1]是re_seq
+                    ro_final_df = Unified_df_format(ro_final_df,ab_amino[0],ab_amino[1],rotamer)#ab_amino[0]是chain，ab_amino[1]是re_seq
+
+                    
+
+
+
+
+
+
+
 
 # TODO def x (ro,antigen):
 #            return 氢键信息的字典 
@@ -252,6 +267,7 @@ ab_amino_df = get_amino_dataFrame(interface_antibody_df,ab_ag_cor_dict[interface
 rotamer_df = atom(rotamers['ASN'][1])
 ro_final_df = final_rotamer_dataFrame(rotamer_df,ab_amino_df)
 
+
 ro_final_df['re_seq'] = ab_ag_cor_dict[interface_antigen_list[0]][0][1]#ab_amino_info = 
 ro_final_df['chain'] = ab_ag_cor_dict[interface_antigen_list[0]][0][0]
 ro_final_df['RESIDUE_NAME'] = rotamer_name[0]
@@ -259,37 +275,82 @@ ro_final_df['RESIDUE_NAME'] = rotamer_name[0]
 ab_chain = ab_ag_cor_dict[interface_antigen_list[0]][0][0]
 ab_re_seq = ab_ag_cor_dict[interface_antigen_list[0]][0][1]
 
-ro_final_df.values.tolist()
-ab_amino_df.values.tolist()
+#使用字典的方式，将替换的rotamer与抗体上的氨基酸进行替换，并输出为list
+def replace_pdb_list(pdb_dict,rotamer_df,antibody_chain,antibody_re_seq):
+    pdb_dict = pdb_dict.copy()
+    pdb_dict[antibody_chain][antibody_re_seq] = rotamer_df.values.tolist()
+    pdb_df = dict_to_df(pdb_dict)
+    pdb_df['ATOM_NUMBER'] = list(range(1,len(pdb_df) + 1 ))
+    pdb_list = all_formatDataFrame(pdb_df).values.tolist()
+    return pdb_list
+
+
+
 pdb_file_dict_replace = pdb_file_dict.copy()
 pdb_file_dict_replace[ab_chain][ab_re_seq] = ro_final_df.values.tolist()
 pdb_file_df_replace = dict_to_df(pdb_file_dict_replace)
 
 pdb_file_df_replace['ATOM_NUMBER'] = list(range(1,len(pdb_file_df_replace) + 1 ))
 
+pdb_file_df_replace.to_csv('text.txt', sep=' ',
+                            index=False, header=False)
 
+pdb_file_df_replace = all_formatDataFrame(pdb_file_df_replace)
 
+pdb_file_list_replace = pdb_file_df_replace.values.tolist()
 
+f=open("text.pdb","w")
+for i in pdb_file_list_replace:
+    f.writelines(i + ['\n'])
+f.close()
 
+# 获得旋转后rotamer的pdb文件
+ro_final_df = all_formatDataFrame(ro_final_df)
+ro_file_list = ro_final_df.values.tolist()
+f=open("ASN.pdb","w")
+for i in ro_file_list:
+    f.writelines(i + ['\n'])
+f.close()
 
+#初始rotamer
+rotamer_df = atom(rotamers['ASN'][1])
+rotamer_df = all_formatDataFrame(rotamer_df)
+rotamer_df_list = rotamer_df.values.tolist()
+f=open("ASN_begin.pdb","w")
+for i in rotamer_df_list:
+    f.writelines(i + ['\n'])
+f.close()
 
+#被替换的抗体氨基酸
+ab_amino_df = get_amino_dataFrame(interface_antibody_df,ab_ag_cor_dict[interface_antigen_list[0]][0])
+ab_amino_df = ab_amino_df.copy()
+ab_amino_df = all_formatDataFrame(ab_amino_df)
+ab_amino_df_list = ab_amino_df.values.tolist()
+f=open("SER.pdb","w")
+for i in ab_amino_df_list:
+    f.writelines(i + ['\n'])
+f.close()
 
+#将CA移动到替换的抗体氨基酸的CA上
+move_list = move_x_y_z(ab_amino_df,rotamer_df)
+ro_final_df= coordinate_translation(rotamer_df,move_list)
+ro_final_df = all_formatDataFrame(ro_final_df)
+ro_file_list = ro_final_df.values.tolist()
+f=open("ASN_shift.pdb","w")
+for i in ro_file_list:
+    f.writelines(i + ['\n'])
+f.close()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#将两个CA进行旋转重叠
+# 
+ro_first_rotamer = new_rotamer(ro_final_df, vector_pairs(ab_amino_df)[0], vector_pairs(ro_final_df)[0])
+ro_first_rotamer = ro_first_rotamer.copy()
+ro_first_rotamer = all_formatDataFrame(ro_first_rotamer)
+ro_first_rotamer_list = ro_first_rotamer.values.tolist()
+f=open("ASN_first_rotation.pdb","w")
+for i in ro_first_rotamer_list:
+    f.writelines(i + ['\n'])
+f.close()
 
 
 

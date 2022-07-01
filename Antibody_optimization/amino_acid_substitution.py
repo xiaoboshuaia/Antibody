@@ -82,13 +82,14 @@ def ro_amino(RESIDUE_NAME, ro_type):
 
 
 def vector_pairs(amino_dataframe):
-    amino_dataframe = to_0(amino_dataframe)
-    B = amino_dataframe.copy()
-    C_CA = subtraction_list(B, B, ' C  ', ' CA ')
-    C_N = subtraction_list(B, B, ' N  ', ' CA ')
-    C_CA = [round(i, 3) for i in C_CA.values.tolist()[0]]
-    C_N = [round(i, 3) for i in C_N.values.tolist()[0]]
-    return C_CA, C_N
+    C = np.array(amino_dataframe.loc[amino_dataframe['ATOM_NAME'] == ' C  '].iloc[:, 6:9])
+    CA = np.array(amino_dataframe.loc[amino_dataframe['ATOM_NAME'] == ' CA '].iloc[:, 6:9])
+    N = np.array(amino_dataframe.loc[amino_dataframe['ATOM_NAME'] == ' N  '].iloc[:, 6:9])
+    CA_C = list(C - CA)
+    CA_N = list(N - CA)
+    CA_C = [round(i, 3) for i in CA_C[0]]
+    CA_N = [round(i, 3) for i in CA_N[0]]
+    return CA_C, CA_N
 
 # 新建一个dataframe，对刚体的诶个坐标都进行处理,将刚体每个元素旋转过后的数据添加到新的dataframe中
 
@@ -103,7 +104,7 @@ def new_rotamer(old_rotamer1, vector_1, vector_2):
                                     new_coor.tolist()]
     return old_rotamer
 
-# 计算平移的x，y，z的距离，使用中心C作为计算
+# 计算平移的x，y，z的距离，使用中心CA作为计算
 
 
 def move_x_y_z(ab_data, ro_data):
@@ -200,7 +201,7 @@ def formatDataFrame_r(df, column, length):
 def all_formatDataFrame(df):
     ATOM = formatDataFrame_l(df, 'ATOM', 6)
     ATOM_NUMBE = formatDataFrame_r(ATOM, 'ATOM_NUMBER', 5)
-    ATOM_NAME = formatDataFrame_l(ATOM_NUMBE, 'ATOM_NAME', 5)
+    ATOM_NAME = formatDataFrame_l(ATOM_NUMBE, 'ATOM_NAME', 6)
     RESIDUE_NAME = formatDataFrame_l(ATOM_NAME, 'RESIDUE_NAME', 4)
     chain = formatDataFrame_l(RESIDUE_NAME, 'chain', 1)
     re_seq = formatDataFrame_r(chain, 're_seq', 4)
