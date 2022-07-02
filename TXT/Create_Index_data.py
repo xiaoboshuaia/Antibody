@@ -2,7 +2,7 @@
 Author: xiaobo 973801194@qq.com
 Date: 2022-06-24 11:19:39
 LastEditors: xiaobo 973801194@qq.com
-LastEditTime: 2022-06-26 20:18:54
+LastEditTime: 2022-07-02 18:22:23
 FilePath: \第二轮轮转\索引表\索引表\Antibody_optimization\Create_Index_data.py
 Description: 
 '''

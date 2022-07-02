@@ -221,26 +221,42 @@ if __name__ == '__main__':
     interface_antigen_list = list(ab_ag_cor_dict.keys())#得到interface的抗原的list
     
     for ag_amino in interface_antigen_list:
-        ag_amino_df = get_amino_dataFrame(interface_antigen_df,ag_amino)#得到一个抗原氨基酸的dataFrame
         
+        print(ag_amino)
+        
+        ag_amino_df = get_amino_dataFrame(interface_antigen_df,ag_amino)#得到一个抗原氨基酸的dataFrame
+        ag_amino_chain,ag_amino_re_seq,ag_amino_RESIDUE_NAME = ag_amino[0],ag_amino[1],ag_amino[2]
         #得到抗原氨基酸对应抗体的list，在抗体的list中删除不能替换的抗体氨基酸
         #TODO 这里可能需要再删除重复元素之前，对字典的值做一个copy以免删去原本的值
         ab_amino_list = del_cannot_replace_amino(ab_ag_cor_dict[ag_amino],cannot_replace_amino_list)#删除不能替换的氨基酸
         
-        rotamer_name = top5_amino(ag_amino[2])#得到替换抗体的top5氨基酸名字的list
+        rotamer_name = top5_amino(ag_amino_RESIDUE_NAME)#得到替换抗体的top5氨基酸名字的list
         
         for ab_amino in ab_ag_cor_dict[ag_amino]:
-            ab_amino_df = get_amino_dataFrame(interface_antibody_df,ab_amino)#得到一个抗体氨基酸的dataFrame
             
+            print(ab_amino)
+            
+            ab_amino_df = get_amino_dataFrame(interface_antibody_df,ab_amino)#得到一个抗体氨基酸的dataFrame
+            ab_amino_chain,ab_amino_re_seq,ab_amino_RESIDUE_NAME = ab_amino[0],ab_amino[1],ab_amino[2]
             
             for rotamer in rotamer_name:
                 for ro_type in list(rotamers[rotamer].keys()):
+                    
+                    print(rotamer,ro_type)
+                    
                     rotamer_df = atom(rotamers[rotamer][ro_type])
                     #得到旋转平移后的rotamer的dataFrame
                     ro_final_df = final_rotamer_dataFrame(rotamer_df,ab_amino_df)
-                    ro_final_df = Unified_df_format(ro_final_df,ab_amino[0],ab_amino[1],rotamer)#ab_amino[0]是chain，ab_amino[1]是re_seq
+                    # 将旋转平移后的rotamer的dataFrame格式化
+                    ro_final_df = Unified_df_format(ro_final_df,ab_amino_chain,ab_amino_re_seq,rotamer)#ab_amino[0]是chain，ab_amino[1]是re_seq
 
-                    
+                    if youxindeqingjian:
+                        replace_pdb_list = replace_pdb_list(pdb_file_dict,ro_final_df,ab_amino_chain,ab_amino_re_seq) 
+                        # 将替换后的蛋白质进行输出
+                        f=open(ab_amino_chain + ab_amino_re_seq + rotamer + ro_type + ".pdb","w")
+                        for i in replace_pdb_list:
+                            f.writelines(i + ['\n'])
+                        f.close()
 
 
 
