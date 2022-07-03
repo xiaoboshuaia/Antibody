@@ -2,7 +2,7 @@
 Author: xiaobo 973801194@qq.com
 Date: 2022-06-24 16:22:02
 LastEditors: xiaobo 973801194@qq.com
-LastEditTime: 2022-07-01 17:44:39
+LastEditTime: 2022-07-02 18:37:56
 FilePath: \Project\Antibody\Index\Antibody_optimization\Antibody_amino_replacement.py
 Description:
 '''
@@ -377,7 +377,15 @@ f.close()
 
 
 
+# get a number from a list
+def get_number(list):
+    number = []
+    for i in list:
+        number.append(i[0])
+    return number
 
+
+list()
 
 
 
