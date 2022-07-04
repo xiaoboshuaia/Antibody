@@ -2,7 +2,7 @@
 Author: xiaobo 973801194@qq.com
 Date: 2022-01-21 17:01:21
 LastEditors: xiaobo 973801194@qq.com
-LastEditTime: 2022-07-02 10:49:04
+LastEditTime: 2022-07-04 18:10:10
 FilePath: \Project\Antibody\Index\Antibody_optimization\epitope_judgment.py
 Description: 
 '''
@@ -57,14 +57,14 @@ def ab_ag_CA(first_CA, second_CA):
     x_min, x_max = range_H_CA(second_CA, 'x')
     y_min, y_max = range_H_CA(second_CA, 'y')
     z_min, z_max = range_H_CA(second_CA, 'z')
+    first_CA = first_CA.copy()
     x = first_CA[(first_CA.coordinate_x > x_min) &
-                (first_CA.coordinate_x < x_max)]
-    x = x.copy()
-    x_y = x[(first_CA.coordinate_y > y_min) & (first_CA.coordinate_y < y_max)]
-    x_y = x_y.copy()
-    x_y_z = x_y[(first_CA.coordinate_z > z_min) &
-                (first_CA.coordinate_z < z_max)]
-    return x_y_z
+                 (first_CA.coordinate_x < x_max) & 
+                 (first_CA.coordinate_y > y_min) & 
+                 (first_CA.coordinate_y < y_max) & 
+                 (first_CA.coordinate_z > z_min) &
+                 (first_CA.coordinate_z < z_max)]
+    return x
 
 # delete the repeat element in dict values
 
