@@ -24,7 +24,6 @@ from Wheels import dict_pdb_atom, dict_to_df, differ_ab_ag, distance, get_pdb_fi
 #input a amino's DataFrame,output two DataFrame,one is the amino's donor,the other is the amino's receptor
 #将氨基酸的数据框输入，输出两个数据框，一个是氨基酸的donor，另一个是氨基酸的receptor，通过any的方法来构建一个新的由
 
-
 def get_donor_receptor(amino_df):
     def judgment(amino_df):
         judgment_donor = []
@@ -43,7 +42,6 @@ def get_donor_receptor(amino_df):
     amino_df['judgment_receptor'] = judgment(amino_df)[1]
     return amino_df.loc[amino_df['judgment_donor']], amino_df.loc[amino_df['judgment_receptor']]
 
-
 # get can't replace antibody amino input txt_path output list [['chain','re_seq']]
 def get_cannot_replace_amino(txt_file_path):
     cannot_replace_amino = []
@@ -53,13 +51,11 @@ def get_cannot_replace_amino(txt_file_path):
             [force_info.iloc[i, 2], force_info.iloc[i, 3], force_info.iloc[i, 1]])  # [antibody_chain,re_seq]
     return cannot_replace_amino
 
-
 # get amino_dataFrame from big dataFrame by a list which store the amino info like ['chain','re_seq','RESIDUE_NAME']
 def get_amino_dataFrame(big_dataFrame, amino_info_list):
     amino_dataFrame = big_dataFrame.loc[
         (big_dataFrame['chain'] == amino_info_list[0]) & (big_dataFrame['re_seq'] == amino_info_list[1])]
     return amino_dataFrame
-
 
 # get top5 amino list from top_5_amino_antibody
 def top5_amino(ag_amino_name):
@@ -68,14 +64,12 @@ def top5_amino(ag_amino_name):
         top5_amino.append(i[0])
     return top5_amino
 
-
 # del cannot replace amino from antibody_amino_list
 def del_cannot_replace_amino(antibody_amino_list, cannot_replace_amino):
     for i in cannot_replace_amino:
         if i in antibody_amino_list:
             antibody_amino_list.remove(i)
     return antibody_amino_list
-
 
 # get after rotation and translation rotamer dataFrame ,input is the rotamer,antibody dataFrame,output is the rotamer dataFrame
 def final_rotamer_dataFrame(rotamer_amino_df, antibody_amino_df):
@@ -89,12 +83,12 @@ def final_rotamer_dataFrame(rotamer_amino_df, antibody_amino_df):
     ro_final.loc[ro_final['ATOM_NAME'] == ' O  '] = antibody_amino_df.loc[antibody_amino_df['ATOM_NAME'] == ' O  ']
     return ro_final
 
-
 # 统一dataFrame的格式
-def Unified_df_format(df, chain, re_seq, rotamer_name):
-    df['chain'] = chain
-    df['re_seq'] = re_seq
-    df['RESIDUE_NAME'] = rotamer_name
+def Unified_df_format(df_goal, df_exp):
+    df = df_goal.copy()
+    df['chain'] = df_exp.iloc[1,4]
+    df['re_seq'] = df_exp.iloc[1,5]
+    df['RESIDUE_NAME'] = df_goal.iloc[1,3]
     return df
 
 # 使用字典的方式，将替换的rotamer与抗体上的氨基酸进行替换，并输出为list
@@ -105,6 +99,21 @@ def replace_pdb_list(pdb_dict, rotamer_df, antibody_chain, antibody_re_seq):
     pdb_df['ATOM_NUMBER'] = list(range(1, len(pdb_df) + 1))
     pdb_list = all_formatDataFrame(pdb_df).values.tolist()
     return pdb_list
+
+# 将该抗体对应的所有抗原氨基酸对应的替换rotamer前五位的氨基酸，放进一个list中，便于下一步替换
+def replace_romater_name(ag_amino_list):
+    rotamer_name = []
+    for ag_amino in ag_amino_list:
+        ag_amino_RESIDUE_NAME = ag_amino[2]
+        for i in top5_amino(ag_amino_RESIDUE_NAME):
+            if i not in rotamer_name:
+                rotamer_name.append(i)
+    return rotamer_name    
+
+
+
+
+
 
 
 text_pdb = open_pdb_file(r'D:\Project\Antibody\Index\7BWJ\7bwj.pdb')
@@ -271,20 +280,21 @@ interface_antibody_list_new = [i for i in interface_antibody_list if list(i) not
 ab_amino_THR = interface_antibody_list_new[0]
 ag_amino_THR = ab_ag_cor_dict[ab_amino_THR]
 
-rotamer_name = []
-for ag_amino in ag_amino_THR:
-    ag_amino_RESIDUE_NAME = ag_amino[2]
-    for i in top5_amino(ag_amino_RESIDUE_NAME):
-        if i not in rotamer_name:
-            rotamer_name.append(i)
-            
-    rotamer_name.append(i for i in top5_amino(ag_amino_RESIDUE_NAME) if i not in rotamer_name)  # 得到替换抗体的top5氨基酸名字的list
+rotamer_name = replace_romater_name(ag_amino_THR)
+
+rotamer_LEU_type  = list(rotamers[rotamer_name[0]].keys())
+rotamer_LEU = atom(rotamers[rotamer_name[0]][rotamer_LEU_type[0]])
+
+ro_LEU = final_rotamer_dataFrame(rotamer_LEU, ab_amino_df)
+ro_LEU = Unified_df_format(ro_LEU, ab_amino_df)
+
+LEU_donor,LEU_receptor = get_donor_receptor(ro_LEU)
 
 
 
 
 
-rotamer_name = top5_amino(interface_antigen_list[0][2])
+
 
 ab_amino_df = get_amino_dataFrame(interface_antibody_df, ab_ag_cor_dict[interface_antigen_list[0]][0])
 rotamer_df = atom(rotamers['ASN'][1])
