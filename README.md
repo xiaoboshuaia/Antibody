@@ -1,6 +1,5 @@
-- 👋 Hi, I’m @xiaoboshuaia
-- 👀 I’m interested in bioinformation
-- 🌱 I’m currently learning django
+保存课题的文件
+
 
 <!---
 xiaoboshuaia/xiaoboshuaia is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
